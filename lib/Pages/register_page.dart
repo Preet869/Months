@@ -1,22 +1,21 @@
-// ignore_for_file: prefer_const_constructors
+import "package:flutter/material.dart";
+import "package:month_project/componments/botton.dart";
+import "package:month_project/componments/text_field.dart";
 
-import 'package:flutter/material.dart';
-import 'package:month_project/componments/botton.dart';
-import 'package:month_project/componments/text_field.dart';
-
-class SignInPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const SignInPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<SignInPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-//Text editing controllers
-final emailTextController = TextEditingController();
-final passwordTextController = TextEditingController();
+class _RegisterPageState extends State<RegisterPage> {
+  //Text editing controllers
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+  final comfirmPasswordTextController = TextEditingController();
 
-class _LoginPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +27,6 @@ class _LoginPageState extends State<SignInPage> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 50),
-
                     //logo
                     //const Icon(
                     // Icons.lock,
@@ -55,8 +52,14 @@ class _LoginPageState extends State<SignInPage> {
                         obscureText: true),
                     const SizedBox(height: 25),
 
+                    // comfirm password textfield
+                    MyTextField(
+                        controller: comfirmPasswordTextController,
+                        hintText: 'Comfirm Password',
+                        obscureText: true),
+                    const SizedBox(height: 25),
                     //SignIn button
-                    MyButton(onTap: () {}, text: 'Sign In'),
+                    MyButton(onTap: () {}, text: 'Sign Up'),
 
                     SizedBox(height: 5),
 
@@ -65,14 +68,14 @@ class _LoginPageState extends State<SignInPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Not a member?",
+                          "Already a member?",
                           style: TextStyle(color: Colors.grey[700]),
                         ),
                         const SizedBox(width: 4),
                         GestureDetector(
                           onTap: widget.onTap,
                           child: const Text(
-                            "Register now",
+                            "Sign Up",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
