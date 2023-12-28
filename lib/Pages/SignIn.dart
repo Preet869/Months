@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:month_project/componments/botton.dart';
 import 'package:month_project/componments/text_field.dart';
 
@@ -28,16 +29,15 @@ class _LoginPageState extends State<SignInPage> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 50),
-
-                    //logo
-                    //const Icon(
-                    // Icons.lock,
-                    // size: 100
-                    // ),
+                    const SizedBox(height: 0),
+                    Lottie.asset(
+                    "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
+                    width: 100,
+                    ),
 
                     //Title
                     Text(
+                      style: TextStyle(fontSize: 50),
                       'Welcome to Months',
                     ),
 
@@ -47,7 +47,7 @@ class _LoginPageState extends State<SignInPage> {
                         controller: emailTextController,
                         hintText: 'Email',
                         obscureText: false),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 25),
                     //password box
                     MyTextField(
                         controller: passwordTextController,
