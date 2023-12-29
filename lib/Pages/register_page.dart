@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import "package:flutter/material.dart";
 import "package:lottie/lottie.dart";
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:month_project/componments/botton.dart";
 import "package:month_project/componments/text_field.dart";
 
@@ -17,6 +21,46 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordTextController = TextEditingController();
   final comfirmPasswordTextController = TextEditingController();
 
+  Future<void> signUp() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    //make sure password match
+    if (passwordTextController.text != comfirmPasswordTextController.text) {
+      //pop loading circle
+      Navigator.pop(context);
+      // show error to user
+      displayMessage("Passwords don't match!");
+      return;
+    }
+
+    //try creating the user
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailTextController.text,
+          password: passwordTextController.text);
+      if (context.mounted) Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      //pop loading cricle
+      Navigator.pop(context);
+      //show error to us
+      displayMessage(e.code);
+    }
+  }
+
+  void displayMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(message),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,14 +71,14 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: const EdgeInsets.all(15),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: duplicate_ignore
                   children: [
                     Lottie.asset(
-                    "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
-                    width: 100,
+                      "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
+                      width: 100,
                     ),
 
                     //Title
-                    // ignore: prefer_const_constructors
                     Text(
                       style: TextStyle(fontSize: 50),
                       'Welcome to Months',
@@ -60,8 +104,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: 'Comfirm Password',
                         obscureText: true),
                     const SizedBox(height: 25),
-                    //SignIn button
-                    MyButton(onTap: () {}, text: 'Sign Up'),
+                    //SignUp button
+                    MyButton(onTap: signUp, text: 'Sign Up'),
 
                     SizedBox(height: 5),
 

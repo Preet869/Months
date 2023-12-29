@@ -1,5 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore: file_names
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:month_project/componments/botton.dart';
@@ -13,11 +15,48 @@ class SignInPage extends StatefulWidget {
   State<SignInPage> createState() => _LoginPageState();
 }
 
-//Text editing controllers
-final emailTextController = TextEditingController();
-final passwordTextController = TextEditingController();
-
 class _LoginPageState extends State<SignInPage> {
+//Text editing controllers
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+
+  //sign user in
+  void signIn() async {
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    // try sign in
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+
+      //pop loading cricle
+      if (context.mounted) Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      //pop loading circle
+      Navigator.pop(context);
+      //display error message
+      displayMessage(e.code);
+    }
+  }
+
+  // display a dialog message
+  void displayMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(message),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +70,12 @@ class _LoginPageState extends State<SignInPage> {
                   children: [
                     const SizedBox(height: 0),
                     Lottie.asset(
-                    "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
-                    width: 100,
+                      "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
+                      width: 100,
                     ),
 
                     //Title
-                    Text(
+                    const Text(
                       style: TextStyle(fontSize: 50),
                       'Welcome to Months',
                     ),
@@ -56,9 +95,9 @@ class _LoginPageState extends State<SignInPage> {
                     const SizedBox(height: 25),
 
                     //SignIn button
-                    MyButton(onTap: () {}, text: 'Sign In'),
+                    MyButton(onTap: signIn, text: 'Sign In'),
 
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
 
                     //resigster link
                     Row(
