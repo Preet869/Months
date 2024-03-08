@@ -1,6 +1,6 @@
 # month_project
 
-A new Flutter project.
+Currently develop a flutter based mobile app called 'Months'. The idea behinde Months is it allows user to sign up using firebase auth, and take 1 per month.
 
 ## Getting Started
 
