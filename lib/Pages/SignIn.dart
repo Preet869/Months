@@ -1,4 +1,3 @@
-// ignore: file_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -70,8 +69,8 @@ class _LoginPageState extends State<SignInPage> {
                   children: [
                     const SizedBox(height: 0),
                     Lottie.asset(
-                      "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
-                      width: 100,
+                      "images/calendar.json",
+                      width: 150,
                     ),
 
                     //Title

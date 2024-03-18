@@ -74,10 +74,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   // ignore: duplicate_ignore
                   children: [
                     Lottie.asset(
-                      "/Users/ppreet/Desktop/Work/Programming/Projects/Months/month_project/images/calendar.json",
-                      width: 100,
+                      "images/calendar.json",
+                      width: 150,
                     ),
-
                     //Title
                     Text(
                       style: TextStyle(fontSize: 50),
