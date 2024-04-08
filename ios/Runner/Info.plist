@@ -47,15 +47,12 @@
     <true/>
     <key>CFBundleIcons</key>
     <dict>
-        <key>CFBundleAlternateIcons</key>
+        <key>CFBundlePrimaryIcon</key>
         <dict>
-            <key>AlternateIconName</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>images/AppIcon.png</string>
-                </array>
-            </dict>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>AppIcon</string>
+            </array>
         </dict>
     </dict>
 </dict>

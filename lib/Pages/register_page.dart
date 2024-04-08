@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import "package:flutter/material.dart";
 import "package:lottie/lottie.dart";
+// ignore: unused_import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:month_project/componments/botton.dart";
