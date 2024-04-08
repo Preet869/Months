@@ -17,10 +17,11 @@ class _CountdownPageState extends State<CountdownPage> {
   void initState() {
     super.initState();
     _calculateNextMonth();
-    _startTimer();
+    _startTimer(); //updates the UI every second to reflect
   }
 
   void _calculateNextMonth() {
+    //calculates the date of the next month based on the current date.
     DateTime now = DateTime.now();
     int currentMonth = now.month;
     int nextMonth = currentMonth == 12 ? 1 : currentMonth + 1;
@@ -52,8 +53,8 @@ class _CountdownPageState extends State<CountdownPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '$days days $hours hours $minutes minutes $seconds seconds',
-          style: const TextStyle(fontSize: 24),
+          '$days / $hours / $minutes / $seconds s',
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ],
     );

@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 50),
               Text(
                 style: TextStyle(fontSize: 25),
-                'Till then'
+                'Till then...'
               ),
               const SizedBox(height: 50),
               MyButton(onTap: signOut, text: 'View Gallery'),
