@@ -1,27 +1,28 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:month_project/Pages/photo_page.dart';
+import 'package:month_project/componments/button_app.dart';
 
 class CountdownPage extends StatefulWidget {
-  const CountdownPage({super.key});
+  const CountdownPage({Key? key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _CountdownPageState createState() => _CountdownPageState();
 }
 
 class _CountdownPageState extends State<CountdownPage> {
   late Timer _timer;
   late DateTime _nextMonth;
+  bool _showButton = false;
 
   @override
   void initState() {
     super.initState();
     _calculateNextMonth();
-    _startTimer(); //updates the UI every second to reflect
+    _startTimer();
   }
 
   void _calculateNextMonth() {
-    //calculates the date of the next month based on the current date.
     DateTime now = DateTime.now();
     int currentMonth = now.month;
     int nextMonth = currentMonth == 12 ? 1 : currentMonth + 1;
@@ -34,11 +35,22 @@ class _CountdownPageState extends State<CountdownPage> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         timeUntilNextMonth = _nextMonth.difference(DateTime.now());
+        if (timeUntilNextMonth <= Duration.zero) {
+          _showButton = false;
+          _timer.cancel();
+        }
       });
-      if (timeUntilNextMonth <= Duration.zero) {
-        _timer.cancel();
-      }
     });
+  }
+
+  void _takePhoto() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TakePhotoPage()),
+    );
+    // After taking the photo, restart the countdown
+    _showButton = false;
+    _startTimer();
   }
 
   @override
@@ -53,9 +65,14 @@ class _CountdownPageState extends State<CountdownPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '$days / $hours / $minutes / $seconds s',
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          '$days / $hours / $minutes / $seconds s ',
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        if (_showButton)
+          ElevatedButton(
+            onPressed: _takePhoto,
+            child: const Text('Take a Photo'),
+          ),
       ],
     );
   }
