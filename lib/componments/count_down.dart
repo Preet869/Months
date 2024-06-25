@@ -13,7 +13,7 @@ class CountdownPage extends StatefulWidget {
 class _CountdownPageState extends State<CountdownPage> {
   late Timer _timer;
   late DateTime _nextMonth;
-  bool _showButton = false;
+  bool _showButton = true;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _CountdownPageState extends State<CountdownPage> {
   void _takePhoto() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TakePhotoPage()),
+      MaterialPageRoute(builder: (context) =>  TakePhotoPage()),
     );
     // After taking the photo, restart the countdown
     _showButton = false;
