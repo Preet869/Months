@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,11 +13,22 @@ void main() async {
   );
 
   runApp(const MyApp());
+
+  // Call the permission request method
+  requestStoragePermission();
 }
 
+void requestStoragePermission() async {
+  // Check if the platform is not web, as web has no permissions
+  // Request camera permission
+  var cameraStatus = await Permission.camera.status;
+  if (!cameraStatus.isGranted) {
+    await Permission.camera.request();
+  }
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +37,4 @@ class MyApp extends StatelessWidget {
       home: AuthPage(),
     );
   }
-  void requestStoragePermission() async {
-    // Check if the platform is not web, as web has no permissions
-      // Request camera permission
-      var cameraStatus = await Permission.camera.status;
-      if (!cameraStatus.isGranted) {
-        await Permission.camera.request();
-      }
-    }
 }
-

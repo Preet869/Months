@@ -1,125 +1,45 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print
+
 import 'package:camera/camera.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
-class TakePhotoPage extends StatefulWidget {
-  const TakePhotoPage({Key? key}) : super(key: key);
+class CameraLogic {
+  late CameraController _cameraController;
+  late Future<void> _initializeController;
 
-  @override
-  _TakePhotoPageState createState() => _TakePhotoPageState();
-}
+  Future<void> initializeCamera() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
 
-class _TakePhotoPageState extends State<TakePhotoPage> {
-  CameraController? _cameraController;
-  Future<void>? _initializeController;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _requestCameraPermission(); // Request camera permissions
-
-    // Initialize the camera
-    _initializeCameras();
-  }
-
-  void _initializeCameras() async {
-    try {
-      final cameras = await availableCameras();
-      if (cameras.isEmpty) {
-        setState(() {
-          _error = "No cameras available";
-        });
-        return;
-      }
-
-      final firstCamera = cameras.first;
-
-      _cameraController = CameraController(
-        firstCamera,
-        ResolutionPreset.high,
-      );
-
-      // Start the camera initialization
-      setState(() {
-        _initializeController = _cameraController?.initialize();
-      });
-    } catch (e) {
-      setState(() {
-        _error = "Error initializing cameras: $e";
-      });
-    }
-  }
-
-  void _requestCameraPermission() async {
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      await Permission.camera.request();
-    }
-  }
-
-  void _takePhoto() async {
-    if (_cameraController != null && _cameraController!.value.isInitialized) {
-      try {
-        // Capture the photo
-        final image = await _cameraController!.takePicture();
-        print("Photo captured: ${image.path}"); // Placeholder logic
-        // Here, you might save the photo, navigate, or do other logic with the captured image
-      } catch (e) {
-        print("Error capturing photo: $e");
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _cameraController
-        ?.dispose(); // Dispose of the controller to release resources
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text("Take a Photo"),
-      ),
-      body: _error != null
-          ? Center(
-              child: Text(_error!),
-            )
-          : FutureBuilder<void>(
-              future: _initializeController,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Display the camera preview
-                      Expanded(
-                        child: CameraPreview(_cameraController!),
-                      ),
-                      ElevatedButton(
-                        onPressed: _takePhoto, // Capture a photo
-                        child: const Text("Take a Photo"),
-                      ),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text("Error initializing camera"),
-                  );
-                } else {
-                  // While initializing, show a loading indicator
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
+    _cameraController = CameraController(
+      firstCamera,
+      ResolutionPreset.high,
     );
+
+    _initializeController = _cameraController.initialize();
+  }
+
+  Future<void> takePhoto(Function(File) addPhotoCallback) async {
+    try {
+      await _initializeController;
+      final image = await _cameraController.takePicture();
+      final directory = await getApplicationDocumentsDirectory();
+      final String filePath = '${directory.path}/${DateTime.now()}.jpg';
+      await image.saveTo(filePath);
+
+      final File photo = File(filePath);
+      addPhotoCallback(photo);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  CameraController get cameraController => _cameraController;
+
+  Future<void> get initializeControllerFuture => _initializeController;
+
+  void dispose() {
+    _cameraController.dispose();
   }
 }

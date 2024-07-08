@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:month_project/Pages/photo_page.dart';
-import 'package:month_project/componments/button_app.dart';
+import 'dart:io';
 
 class CountdownPage extends StatefulWidget {
-  const CountdownPage({Key? key});
+  final Function(File) addPhotoCallback;
+
+  const CountdownPage({Key? key, required this.addPhotoCallback})
+      : super(key: key);
 
   @override
   _CountdownPageState createState() => _CountdownPageState();
@@ -12,7 +15,7 @@ class CountdownPage extends StatefulWidget {
 
 class _CountdownPageState extends State<CountdownPage> {
   late Timer _timer;
-  late DateTime _nextMonth;
+  late DateTime _nextMonth = DateTime.now();
   bool _showButton = true;
 
   @override
@@ -23,10 +26,9 @@ class _CountdownPageState extends State<CountdownPage> {
   }
 
   void _calculateNextMonth() {
-    DateTime now = DateTime.now();
-    int currentMonth = now.month;
+    int currentMonth = _nextMonth.month;
     int nextMonth = currentMonth == 12 ? 1 : currentMonth + 1;
-    int nextYear = currentMonth == 12 ? now.year + 1 : now.year;
+    int nextYear = currentMonth == 12 ? _nextMonth.year + 1 : _nextMonth.year;
     _nextMonth = DateTime(nextYear, nextMonth);
   }
 
@@ -46,11 +48,16 @@ class _CountdownPageState extends State<CountdownPage> {
   void _takePhoto() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>  TakePhotoPage()),
+      MaterialPageRoute(
+          builder: (context) =>
+              PhotoPage(addPhotoCallback: widget.addPhotoCallback)),
     );
-    // After taking the photo, restart the countdown
-    _showButton = false;
-    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -65,7 +72,7 @@ class _CountdownPageState extends State<CountdownPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '$days / $hours / $minutes / $seconds s ',
+          '$days / $hours / $minutes / $seconds ',
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         if (_showButton)
