@@ -1,0 +1,10 @@
+# Xcode
+.DS_Store
+/build
+/DerivedData
+
+# Swift
+.swiftpm
+
+# Config
+Config.xcconfig 
