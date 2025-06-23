@@ -87,6 +87,7 @@ struct ContentView: View {
             }
             .onAppear {
                 fetchPhotos()
+                NotificationManager.shared.requestAuthorization()
             }
         }
     }
