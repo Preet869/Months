@@ -66,10 +66,35 @@ struct ContentView: View {
                 CameraView(isPresented: $isCameraPresented, capturedImage: $capturedImage)
             }
             .onChange(of: capturedImage) { _, newImage in
-                if newImage != nil {
-                    // Handle the captured image - we'll add upload functionality later
-                    print("Photo captured!")
+                if let image = newImage {
+                    uploadPhoto(image)
                 }
+            }
+        }
+    }
+    
+    private func uploadPhoto(_ image: UIImage) {
+        guard let userId = appViewModel.session?.user.id,
+              let imageData = image.jpegData(compressionQuality: 0.8) else {
+            print("User not logged in or image data is invalid.")
+            return
+        }
+
+        let calendar = Calendar.current
+        let currentMonth = calendar.component(.month, from: Date())
+        let currentYear = calendar.component(.year, from: Date())
+        let fileName = "\(currentYear)-\(currentMonth).jpeg"
+        let filePath = "\(userId)/\(fileName)"
+
+        Task {
+            do {
+                print("Uploading photo...")
+                try await supabase.storage
+                    .from("photos")
+                    .upload(path: filePath, file: imageData, options: .init(contentType: "image/jpeg"))
+                print("Photo uploaded successfully!")
+            } catch {
+                print("Error uploading photo: \(error.localizedDescription)")
             }
         }
     }
